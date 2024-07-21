@@ -1,0 +1,139 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+            <div>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createChargeModal">
+                    Ajouter une Charge
+                </button>
+
+                <a class="btn btn-secondary" href="{% url 'charge-category-list' %}">
+                    categories de charge
+                    </a>
+
+            </div>
+            <div>
+                <form method="get" class="mb-3">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="q" class="form-label">Nom</label>
+                            <input type="text" name="q" id="q" class="form-control" placeholder="Rechercher par nom..." value="{{ search_query }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="start_date" class="form-label">Date de début</label>
+                            <input type="date" name="start_date" id="start_date" class="form-control" value="{{ start_date }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="end_date" class="form-label">Date de fin</label>
+                            <input type="date" name="end_date" id="end_date" class="form-control" value="{{ end_date }}">
+                        </div>
+                        <div class="col-md-12 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary">Filtrer</button>
+                        </div>
+                    </div>
+                </form>
+                
+            </div>
+        </div>
+        <div class="card border-0 shadow mb-4">
+            <div class="card-body">
+                <h2 class="h5 mb-4">Liste des Charges</h2>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Catégorie</th>
+                                <th>Fournisseur</th>
+                                <th>Montant</th>
+                                <th>Montant Payé</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for charge in charges %}
+                            <tr>
+                                <td>{{ charge.date_charge }}</td>
+                                <td>{{ charge.category }}</td>
+                                <td>{{ charge.fournisseur }}</td>
+                                
+                                <td>{{ charge.montant }}</td>
+                                <td>{{ charge.montant_paye }}</td>
+                                <td>
+                                    <a href="{% url 'charge-update' charge.id %}" class="btn btn-sm btn-primary me-1">Modifier</a>
+                                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteChargeModal" data-charge-id="{{ charge.id }}">Supprimer</button>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6">Aucune charge trouvée.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for creating a new Charge -->
+<div class="modal fade" id="createChargeModal" tabindex="-1" aria-labelledby="createChargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md"> <!-- Changed to modal-md for medium size -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createChargeModalLabel">Créer une Charge</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div class="modal-footer">
+                        <button type="submit" name="create_charge" class="btn btn-primary">Ajouter</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for confirming charge deletion -->
+<div class="modal fade" id="deleteChargeModal" tabindex="-1" aria-labelledby="deleteChargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteChargeModalLabel">Confirmer la suppression</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Êtes-vous sûr de vouloir supprimer cette charge ?
+            </div>
+            <div class="modal-footer">
+                <form method="post" id="deleteChargeForm">
+                    {% csrf_token %}
+                    <input type="hidden" name="charge_id" id="chargeIdToDelete">
+                    <button type="submit" name="delete_charge" class="btn btn-danger">Supprimer</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Pass charge ID to the modal for confirmation
+    var deleteChargeModal = document.getElementById('deleteChargeModal');
+    deleteChargeModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var chargeId = button.getAttribute('data-charge-id');
+        var chargeIdInput = document.getElementById('chargeIdToDelete');
+        chargeIdInput.value = chargeId;
+    });
+</script>
+{% endblock %}

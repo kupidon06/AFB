@@ -1,0 +1,106 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="h3 mb-4">Liste des Poules</h1>
+    
+    <!-- Button trigger modal -->
+    <button class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#createPouleModal">
+        Ajouter une Poule
+    </button>
+    
+    <!-- Poule List Table -->
+    <div class="card border-0 shadow mb-4">
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Race</th>
+                        <th>Description</th>
+                        <th>Prix Unitaire</th>
+                        <th>Photo</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for poule in poules %}
+                    <tr>
+                        <td>{{ poule.race }}</td>
+                        <td>{{ poule.description }}</td>
+                        <td>{{ poule.prix_unitaire }}</td>
+                        <td><img src="{{ poule.photo.url }}" alt="{{ poule.race }}" style="width: 100px;"></td>
+                        <td>
+                            <a href="{% url 'poule-update' poule.id %}" class="btn btn-sm btn-primary">Modifier</a>
+                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deletePouleModal" data-poule-id="{{ poule.id }}">Supprimer</button>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5">Aucune poule trouvée.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for creating a new Poule -->
+<div class="modal fade" id="createPouleModal" tabindex="-1" aria-labelledby="createPouleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createPouleModalLabel">Créer une Poule</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div class="modal-footer">
+                        <button type="submit" name="create_poule" class="btn btn-primary">Ajouter</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for deleting a Poule -->
+<div class="modal fade" id="deletePouleModal" tabindex="-1" aria-labelledby="deletePouleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deletePouleModalLabel">Confirmer la Suppression</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir supprimer cette poule ? Cette action est irréversible.</p>
+            </div>
+            <div class="modal-footer">
+                <form method="post" action="{% url 'poule-list' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="poule_id" id="poule-id">
+                    <button type="submit" name="delete_poule" class="btn btn-danger">Supprimer</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+<!-- JavaScript to set the poule id in the delete modal -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var deletePouleModal = document.getElementById('deletePouleModal');
+        deletePouleModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var pouleId = button.getAttribute('data-poule-id');
+            var modalInput = deletePouleModal.querySelector('#poule-id');
+            modalInput.value = pouleId;
+        });
+    });
+</script>

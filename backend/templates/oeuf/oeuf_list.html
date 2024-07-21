@@ -1,0 +1,105 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="h3 mb-4">Liste des Œufs</h1>
+    
+    <!-- Button trigger modal -->
+    <button class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#createOeufModal">
+        Ajouter un Œuf
+    </button>
+    
+    <!-- Oeuf List Table -->
+    <div class="card border-0 shadow mb-4">
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Description</th>
+                        <th>Prix Unitaire</th>
+                        <th>Photo</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for oeuf in oeufs %}
+                    <tr>
+                        <td>{{ oeuf.nom }}</td>
+                        <td>{{ oeuf.description }}</td>
+                        <td>{{ oeuf.prix_unitaire }}</td>
+                        <td><img src="{{ oeuf.photo.url }}" alt="{{ oeuf.nom }}" style="width: 100px;"></td>
+                        <td>
+                            <a href="{% url 'oeuf-update' oeuf.id %}" class="btn btn-sm btn-primary">Modifier</a>
+                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteOeufModal" data-oeuf-id="{{ oeuf.id }}">
+                                Supprimer
+                            </button>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5">Aucun œuf trouvé.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for creating a new Oeuf -->
+<div class="modal fade" id="createOeufModal" tabindex="-1" aria-labelledby="createOeufModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createOeufModalLabel">Créer un Œuf</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div class="modal-footer">
+                        <button type="submit" name="create_oeuf" class="btn btn-primary">Ajouter</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for confirming deletion of Oeuf -->
+<div class="modal fade" id="deleteOeufModal" tabindex="-1" aria-labelledby="deleteOeufModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteOeufModalLabel">Confirmer la Suppression</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir supprimer cet œuf ?</p>
+            </div>
+            <div class="modal-footer">
+                <form method="post" action="{% url 'oeuf-list' %}" id="deleteOeufForm">
+                    {% csrf_token %}
+                    <input type="hidden" name="oeuf_id" id="oeufIdInput">
+                    <button type="submit" name="delete_oeuf" class="btn btn-danger">Supprimer</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // JavaScript to set the oeuf_id in the delete form
+    var deleteOeufModal = document.getElementById('deleteOeufModal');
+    deleteOeufModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var oeufId = button.getAttribute('data-oeuf-id');
+        var form = deleteOeufModal.querySelector('#deleteOeufForm');
+        form.querySelector('#oeufIdInput').value = oeufId;
+    });
+</script>
+{% endblock %}

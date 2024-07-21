@@ -1,0 +1,102 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<div class="row">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+        
+      <form method="get" action="{% url 'race-list' %}" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Rechercher par nom" value="{{ request.GET.q }}">
+            <button type="submit" class="btn btn-primary">Rechercher</button>
+        </div>
+    </form>
+    </div>
+    <div class="col-lg-8">
+        <div class="card border-0 shadow mb-4">
+            <div class="card-body">
+                <h2 class="h5 mb-4">Liste des races</h2>
+                
+                <div class="table-responsive">
+                    <table class="table table-centered table-nowrap mb-0 rounded">
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="border-0 rounded-start">ID</th>
+                                <th class="border-0">Nom</th>
+                                <th class="border-0">Description</th>
+                                <th class="border-0">Photo</th>
+                                <th class="border-0 rounded-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for race in races %}
+                            <tr>
+                                <td><a href="#" class="text-primary fw-bold">{{ race.id }}</a></td>
+                                <td>{{ race.nom }}</td>
+                                <td>{{ race.description }}</td>
+                                <td>
+                                    {% if race.photo %}
+                                    <img src="{{ race.photo.url }}" alt="{{ race.nom }}" height="50">
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <!-- Modifier avec modal -->
+                                    <a href="{% url 'race-update' race.id %}" class="btn btn-sm btn-info me-1" >
+                                        Modifier
+                                    </a>
+                                    <!-- Formulaire de suppression -->
+                                    <form method="post" style="display:inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="race_id" value="{{ race.id }}">
+                                        <button type="submit" name="delete_race" class="btn btn-sm btn-danger me-1">Supprimer</button>
+                                    </form>
+                                </td>
+                            </tr>
+   
+
+                            {% empty %}
+                            <tr>
+                                <td colspan="5">Aucune race trouvée.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card border-0 shadow mb-4">
+            <div class="card-body">
+                <h2 class="h5 mb-4">Créer une nouvelle race</h2>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ create_form.as_p }}
+                    <button type="submit" name="create_race" class="btn btn-primary">Créer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de création de race 
+<div class="modal fade" id="createRaceModal" tabindex="-1" aria-labelledby="createRaceModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createRaceModalLabel">Créer une nouvelle race</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ create_form.as_p }}
+                    <button type="submit" name="create_race" class="btn btn-primary">Créer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+-->
+
+{% endblock %}

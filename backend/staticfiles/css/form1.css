@@ -1,0 +1,110 @@
+/* dans static/css/styles.css */
+.container{
+    display: flex;
+    flex-direction: row;
+
+    
+    
+}
+.containers{
+  width: 100%;
+  
+  
+  
+}
+
+
+form {
+    max-width: 400px;
+    margin: 0 auto;
+    border-radius: 0.4em;
+    
+    flex:1;
+    
+    margin-right: 20em
+      
+}
+
+label {
+    display: flex;
+    flex-direction: row;
+    display: block;
+    margin-bottom: 8px;
+    height: auto;
+    border-radius: 5%;
+}
+
+input, select {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 16px;
+    
+    border-radius: 0.4em;
+    
+}
+
+button {
+    background-color: #4CAF50;
+    color: #ffff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    width: auto;
+
+}
+
+button:hover {
+    background-color: #45a049;
+}
+/* Style optionnel pour définir la taille et l'apparence de la div scrollable */
+.scrollable-table {
+    width: 100%;
+    max-height: 300px; /* Hauteur maximale de la div scrollable */
+    overflow: auto;
+    border: 1px solid #ccc;
+    
+  }
+
+  /* Style pour le tableau */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f2f2f2;
+  }
+  .imh{
+    flex:1;
+    
+   
+  }
+  .optique{
+    padding-top: 6em;
+    width: 80%;
+    height: auto;
+  }
+  .btnh{
+    margin: 3em 10px 0px 5em;
+    width: auto;
+    flex:1
+    
+
+  }
+  textarea{
+    border-radius:2rem;
+  }
+  
+ 
+    
+    
+

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="600" height="533" class="img-fluid mb-3 mb-md-0" role="img">
+  <title>Chicken Illustration</title>
+  <circle cx="32" cy="32" r="30" fill="#f2d16b"/>
+  <path fill="#d97742" d="M32 2a30 30 0 1030 30A30 30 0 0032 2zm0 58A28 28 0 1160 32 28 28 0 0132 60z"/>
+  <path fill="#d97742" d="M42 36s0 2-4 2-6-2-6-2l-2 4s-2 4-6 4-6-2-6-2v-4l6-4-6-8s0-4 4-4 6 2 6 2 4-4 6-4 6 4 6 4-2 6-2 6z"/>
+  <path fill="#fff" d="M38 38s0 2-4 2-4-2-4-2 2-4 4-4 4 2 4 4z"/>
+  <circle cx="34" cy="36" r="2" fill="#000"/>
+  <path fill="#f2d16b" d="M32 10c-2 0-2 2-2 2s0 2-2 2-4 2-4 4 0 2 2 4 2 0 2 2 2 2 2 2 2-2 2-2 0-2 2-2 2-4 2-4 0-2-2-2-2-2-2-2-2-2z"/>
+</svg>

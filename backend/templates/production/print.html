@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .pay-slip {
+            
+           
+            border: 1px solid #ccc;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: justify;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .employee-details {
+            margin-bottom: 20px;
+            display:flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .table th, .table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .footer {
+            text-align: right;
+        }
+        .vert{
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            .pay-slip {
+                border: none;
+                margin: 0;
+                page-break-after: always;
+            }
+        }
+
+    </style>
+    <title>Fiche journalière</title>
+</head>
+<body>
+
+<div class="pay-slip">
+    <div class="header">
+        <h4>Entreprise fatim distribution sarlu <br> propreietaire exclusive<br>622-22-07-22</h4>
+        <p><strong>Date:</strong> {{date}}</p>
+        <div class="vert">
+        <p><strong>initiale:</strong></p>
+        <p><strong>Produit:</strong></p>
+        </div>
+        <p><strong>A l'usine:</strong></p>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Vehicule</th>
+                <th>Vente</th>
+                <th>Sortie</th>
+                <th>Vendu</th>
+                <th>Retourné</th>
+                <th>Crédit</th>
+                <th>Somme en GNF</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for vente in datap %}
+                <tr>
+                    <td>{{ vente.Vehicule }}</td>
+                    <td>{{ vente.vente }}</td>
+                    <td>{{ vente.sortie }}</td>
+                    <td>{{ vente.vendu }}</td>
+                    <td>{{ vente.retourner }}</td>
+                    <td>{{ vente.credit }} GNF</td>
+                    <td>{{ vente.Somme_gnf }} GNF</td>
+                    <!-- Liens pour modifier et supprimer -->
+                </tr>
+            {% endfor %}
+                    <td>total:</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>{{total_vente}} GNF</td>
+        </tbody>
+    </table>
+    <h5>les depenses du jours</h5>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Actif</th>
+                <th>Type de depense</th>
+                <th>Details</th>
+                <th>Somme en GNF</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+            {% for vente in datau %}
+                <tr>
+                    <td>{{ vente.actif }}</td>
+                    <td>{{ vente.type_depense }}</td>
+                    <td>{{ vente.details }}</td>
+                    <td>{{ vente.Somme_gnf }} GNF</td>
+                    <!-- Liens pour modifier et supprimer -->
+
+                </tr>
+
+            {% endfor %}
+            <td></td>
+            <td></td>
+            <td>Total</td>
+            <td>{{total_depense }} GNF</td>
+        </tbody>
+    </table>
+
+    <div class="footer">
+        <p><strong>Recette:</strong> {{total}} GNF</p>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,72 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block content %}
+<main>
+  <div class="p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
+    <div class="mb-4 w-full">
+      <nav class="flex mb-5" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-2 text-sm font-medium">
+          <li class="inline-flex items-center">
+            <a href="/" class="inline-flex items-center text-gray-700 hover:text-primary-600 dark:text-gray-300 dark:hover:text-white">
+              <svg class="mr-2.5 w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+              </svg>
+              Home
+            </a>
+          </li>
+        </ol>
+      </nav>
+      <h1 class="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white">Livraisons pour {{ french_date }}</h1>
+    </div>
+    <div class="flex items-center space-x-3">
+      <a href="{% url 'vente' %}" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-gray-700 dark:text-gray-400 font-semibold text-sm leading-snug rounded focus:outline-none focus:ring-0 transition duration-150 ease-in-out">
+        <i class="fas fa-plus fa-lg mr-2"></i> Ajouter
+      </a>
+       <a href="{% url 'print_livraison' date %}" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-gray-700 dark:text-gray-400 font-semibold text-sm leading-snug rounded focus:outline-none focus:ring-0 transition duration-150 ease-in-out">
+        <i class="fas fa-file-excel fa-lg mr-2"></i> Imprimer
+      </a>
+    </div>
+  </div>
+  <div class="flex flex-col mt-4">
+    <div class="overflow-x-auto">
+      <div class="inline-block min-w-full align-middle">
+        <div class="overflow-hidden shadow">
+          <table class="min-w-full divide-y divide-gray-200 table-fixed dark:divide-gray-600">
+            <thead class="bg-gray-100 dark:bg-gray-700">
+              <tr>
+                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">Date</th>
+                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">Client</th>
+                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">Quantité</th>
+                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">Montant payé</th>
+                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">Crédit</th>
+                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+              {% for sale in sales %}
+              <tr class="hover:bg-gray-100 dark:hover:bg-gray-700">
+                <td class="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-gray-400">{{ sale.date|date:"d M Y" }}</td>
+                <td class="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-gray-400">{{ sale.Vehicule }}</td>
+                <td class="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-gray-400">{{ sale.vendu|default:"0" }}</td>
+                <td class="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-gray-400">{{ sale.Somme_gnf|default:"0" }} GNF</td>
+                <td class="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-gray-400">{{ sale.credit|default:"0" }} GNF</td>
+                <td class="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-gray-400">
+                  <a href="{% url  'update_vente' sale.id %}" class="text-blue-600 hover:text-blue-900 dark:hover:text-blue-400">  <i class="fas fa-eye fa-lg mr-2 text-gray-700 dark:text-gray-400"></i></a>
+                  <a href="{% url  'list_credit' sale.Vehicule %}" class="text-blue-600 hover:text-blue-900 dark:hover:text-blue-400">  <i class="fas fa-pen fa-lg mr-2 text-gray-700 dark:text-gray-400"></i></a>
+                  <a href="{% url  'remove_vente' sale.id %}" class="text-blue-600 hover:text-blue-900 dark:hover:text-blue-400">  <i class="fas fa-trash fa-lg mr-2 text-gray-700 dark:text-gray-400"></i></a>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="7" class="text-center p-4 text-sm text-gray-500 dark:text-gray-400">Aucune livraison trouvée.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

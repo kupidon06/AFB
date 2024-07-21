@@ -1,0 +1,148 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+        <div>
+            <button class="btn btn-secondary d-inline-flex align-items-center me-2" data-bs-toggle="modal" data-bs-target="#createAlimentationModal">
+                <svg class="icon icon-xs me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                Créer
+            </button>
+        </div>
+        <div>{% include "heas.html" %}</div>
+        
+        
+    </div>
+    <div class="col-lg-12">
+        <div class="card border-0 shadow mb-4">
+            <div class="card-body">
+                <h2 class="h5 mb-4">Liste des alimentations</h2>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Lot</th>
+                                <th>Date d'Alimentation</th>
+                                <th>Type d'Aliment</th>
+                                <th>Quantité (kg)</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for alimentation in alimentations %}
+                            <tr>
+                                <td>{{ alimentation.lot.nom }}</td>
+                                <td>
+                                    {% if alimentation.date_alimentation %}
+                                        {{ alimentation.date_alimentation }}
+                                    {% else %}
+                                        <span class="text-muted">Date non spécifiée</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ alimentation.type_aliment }}</td>
+                                <td>{{ alimentation.quantite }}</td>
+                                <td>
+                                    <!-- Boutons d'action -->
+                                    <a class="btn btn-sm btn-info me-1" href="{% url 'alimentation-update' alimentation.id %}">
+                                        Modifier
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAlimentationModal{{ alimentation.id }}">
+                                        Supprimer
+                                    </button>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5">Aucune alimentation trouvée.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de création d'alimentation -->
+<div class="modal fade" id="createAlimentationModal" tabindex="-1" aria-labelledby="createAlimentationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="alert-container">
+                {% if messages %}
+                    {% for message in messages %}
+                      <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                      </div>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+            <form id="createAlimentationForm" method="post">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createAlimentationModalLabel">Créer une nouvelle alimentation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        {{ create_form.lot.label_tag }}
+                        {{ create_form.lot }}
+                    </div>
+                    <div class="mb-3">
+                        {{ create_form.date_alimentation.label_tag }}
+                        <input type="date" class="form-control" id="id_date_alimentation" name="date_alimentation" value="{{ form.date_alimentation.value|date:'Y-m-d' }}" required>
+                    </div>
+                    <div class="mb-3">
+                        {{ create_form.type_aliment.label_tag }}
+                        {{ create_form.type_aliment }}
+                    </div>
+                    <div class="mb-3">
+                        {{ create_form.quantite.label_tag }}
+                        {{ create_form.quantite }}
+                    </div>
+                    <div class="mb-3">
+                        {{ create_form.commentaire.label_tag }}
+                        {{ create_form.commentaire }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" name="create_alimentation">Créer</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </form>
+
+
+
+        </div>
+    </div>
+</div>
+
+{% for alimentation in alimentations %}
+<!-- Modal de suppression pour chaque alimentation -->
+<div class="modal fade" id="deleteAlimentationModal{{ alimentation.id }}" tabindex="-1" aria-labelledby="deleteAlimentationModalLabel{{ alimentation.id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteAlimentationModalLabel{{ alimentation.id }}">Supprimer Alimentation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir supprimer cette alimentation ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <form method="post" action="{% url 'alimentation-delete' alimentation.id %}" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="alimentation_id" value="{{ alimentation.id }}">
+                    <button type="submit" name="delete_alimentation" class="btn btn-sm btn-danger">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+
+{% endblock %}

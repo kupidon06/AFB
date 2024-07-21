@@ -1,0 +1,23 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+    </div>
+    <div class="col-lg-6">
+        <div class="card border-0 shadow mb-4">
+            <div class="card-body">
+                <h2 class="h5 mb-4">Modifier un programme</h2>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                    <a href="{% url 'race-list' %}" class="btn btn-secondary">Liste</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,156 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="d-flex justify-content-between flex-wrap flex-nowrap align-items-center py-3">
+            <!-- Header or other content here -->
+        </div>
+        <div class="card border-0 shadow">
+            <div class="card-body">
+                <form method="post" id="venteForm">
+                    {% csrf_token %}
+
+                    <input type="hidden" name="form-TOTAL_FORMS" value="1" id="id_form-TOTAL_FORMS">
+                    <input type="hidden" name="form-INITIAL_FORMS" value="1" id="id_form-INITIAL_FORMS">
+                    <input type="hidden" name="form-MIN_NUM_FORMS" value="0" id="id_form-MIN_NUM_FORMS">
+                    <input type="hidden" name="form-MAX_NUM_FORMS" value="1000" id="id_form-MAX_NUM_FORMS">
+
+                    {{ vente_form.as_p }}
+                    {{ formset.management_form }}
+
+                    <h5 class="h6 mb-3">Items de Vente</h5>
+                    <table class="table table-bordered" id="venteItemsTable">
+                        <thead>
+                            <tr>
+                                <th>Article Poule</th>
+                                <th>Article Œuf</th>
+                                <th>Quantité</th>
+                                <th>Prix Unitaire</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for form in formset %}
+                            <tr class="vente-item-row">
+                                <td>{{ form.produit_poule }}</td>
+                                <td>{{ form.produit_oeuf }}</td>
+                                <td>{{ form.quantite }}</td>
+                                <td>{{ form.prix_unitaire }}</td> <!-- Assuming you have a price field -->
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-sm delete-sale-item">Supprimer</button>
+                                    {{ form.id }}
+                                    {{ form.DELETE }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <div class="text-end mb-3">
+                        <p>Total Price: <span id="totalPriceDisplay">0.00</span></p> <!-- Total Price Display -->
+                        <button type="button" id="addSaleItemButton" class="btn btn-secondary">Ajouter un autre item</button>
+                        <button type="submit" class="btn btn-primary">Sauvegarder</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const addSaleItemButton = document.getElementById('addSaleItemButton');
+    const venteItemsTable = document.getElementById('venteItemsTable');
+    const venteForm = document.getElementById('venteForm');
+
+    function updateTotalPrice() {
+        let totalPrice = 0;
+        venteItemsTable.querySelectorAll('tbody tr').forEach(function(row) {
+            // Vérifiez si la ligne est marquée pour suppression
+            const deleteInput = row.querySelector('input[name$=DELETE]');
+            if (deleteInput && deleteInput.checked) {
+                return; // Ignore cette ligne si elle est marquée pour suppression
+            }
+
+            const quantityInput = row.querySelector('input[name$=quantite]');
+            const priceInput = row.querySelector('input[name$=prix_unitaire]');
+            const quantity = parseFloat(quantityInput ? quantityInput.value : 0);
+            const price = parseFloat(priceInput ? priceInput.value : 0);
+            totalPrice += quantity * price;
+        });
+        document.getElementById('totalPriceDisplay').innerText = totalPrice.toFixed(2);
+    }
+
+    function addListenersToRow(row) {
+        row.querySelectorAll('input').forEach(input => {
+            input.addEventListener('change', updateTotalPrice);
+        });
+    }
+
+    if (addSaleItemButton) {
+        addSaleItemButton.addEventListener('click', function() {
+            const totalFormsInput = document.querySelector('input[name="form-TOTAL_FORMS"]');
+            if (totalFormsInput) {
+                const totalForms = parseInt(totalFormsInput.value, 10);
+                const formset = venteItemsTable.querySelector('tbody');
+                const newRow = formset.querySelector('tr').cloneNode(true);
+
+                totalFormsInput.value = totalForms + 1;
+
+                newRow.querySelectorAll('input, select').forEach(function(input) {
+                    const name = input.name.replace(/-\d+-/, '-' + totalForms + '-');
+                    input.name = name;
+                    input.id = name.replace(/-/g, '_');
+                });
+
+                newRow.querySelectorAll('input').forEach(function(input) {
+                    input.value = '';
+                });
+
+                formset.appendChild(newRow);
+
+                addListenersToRow(newRow);
+                updateTotalPrice();
+            } else {
+                console.error('Total Forms input not found');
+            }
+        });
+    } else {
+        console.error('Add Sale Item Button not found');
+    }
+
+    if (venteItemsTable) {
+        venteItemsTable.addEventListener('click', function(e) {
+            if (e.target.classList.contains('delete-sale-item')) {
+                console.log('Delete Button Clicked');
+                const row = e.target.closest('tr');
+                if (row) {
+                    const deleteInput = row.querySelector('input[name$=DELETE]');
+                    if (deleteInput) {
+                        deleteInput.checked = true; // Marquer pour suppression
+                        row.style.display = 'none'; // Masquer la ligne
+                    }
+                    updateTotalPrice();  // Mettre à jour le prix total après suppression d'un item
+                }
+            }
+        });
+    } else {
+        console.error('Vente Items Table not found');
+    }
+
+    venteForm.addEventListener('submit', function() {
+        // Mettre à jour le prix total avant l'envoi du formulaire
+        updateTotalPrice();
+    });
+
+    // Initial call to set the total price
+    document.querySelectorAll('#venteItemsTable tbody .vente-item-row').forEach(addListenersToRow);
+    updateTotalPrice();
+});
+
+
+</script>
+{% endblock %}

@@ -1,0 +1,159 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<div class="row">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+        <div>
+            <button class="btn btn-secondary d-inline-flex align-items-center me-2" data-bs-toggle="modal" data-bs-target="#createJournalisationModal">
+                <svg class="icon icon-xs me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                Créer
+            </button>
+        </div>
+        <div class="dropdown">
+            {% include "heas.html" %}
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="card border-0 shadow mb-4">
+            <div class="card-body">
+                <h2 class="h5 mb-4">Liste des journalisations</h2>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Lot</th>
+                                <th>Date de Journalisation</th>
+                                <th>Nombre de Vivants</th>
+                                <th>Nombre de Décès</th>
+                                <th>Nombre de Malades</th>
+                                <th>Autres Informations</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for journalisation in journalisations %}
+                            <tr>
+                                <td>{{ journalisation.lot.nom }}</td>
+                                <td>{{ journalisation.date_journalisation }}</td>
+                                <td>{{ journalisation.nombre_vivants }}</td>
+                                <td>{{ journalisation.nombre_deces }}</td>
+                                <td>{{ journalisation.nombre_malades }}</td>
+                                <td>{{ journalisation.autres_informations }}</td>
+                                <td>
+                                    <!-- Boutons d'action -->
+                                    <a class="btn btn-sm btn-info me-1" href="{% url 'journalisation-update' journalisation.id %}">
+                                        Modifier
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteJournalisationModal{{ journalisation.id }}">
+                                        Supprimer
+                                    </button>
+                                    <!-- Modal de suppression pour chaque journalisation -->
+                                    <div class="modal fade" id="deleteJournalisationModal{{ journalisation.id }}" tabindex="-1" aria-labelledby="deleteJournalisationModalLabel{{ journalisation.id }}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="deleteJournalisationModalLabel{{ journalisation.id }}">Supprimer Journalisation</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Êtes-vous sûr de vouloir supprimer cette journalisation ?</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                    <form method="post" action="{% url 'journalisation-delete' journalisation.id %}" style="display: inline;">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="journalisation_id" value="{{ journalisation.id }}">
+                                                        <button type="submit" name="delete_journalisation" class="btn btn-sm btn-danger">Supprimer</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7">Aucune journalisation trouvée.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de création de journalisation -->
+<div class="modal fade" id="createJournalisationModal" tabindex="-1" aria-labelledby="createJournalisationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createJournalisationModalLabel">Créer une nouvelle journalisation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="id_date_journalisation">Date de Journalisation:</label>
+                        <input type="date" class="form-control" id="id_date_journalisation" name="date_journalisation" value="{{ form.date_journalisation.value|date:'Y-m-d' }}" required>
+                        <!-- Affichage des erreurs -->
+                        {% if create_form.date_journalisation.errors %}
+                            {% for error in create_form.date_journalisation.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_nombre_vivants">Nombre de Vivants:</label>
+                        {{ create_form.nombre_vivants }}
+                        <!-- Affichage des erreurs -->
+                        {% if create_form.nombre_vivants.errors %}
+                            {% for error in create_form.nombre_vivants.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_nombre_deces">Nombre de Décès:</label>
+                        {{ create_form.nombre_deces }}
+                        <!-- Affichage des erreurs -->
+                        {% if create_form.nombre_deces.errors %}
+                            {% for error in create_form.nombre_deces.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_nombre_malades">Nombre de Malades:</label>
+                        {{ create_form.nombre_malades }}
+                        <!-- Affichage des erreurs -->
+                        {% if create_form.nombre_malades.errors %}
+                            {% for error in create_form.nombre_malades.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_autres_informations">Autres Informations:</label>
+                        {{ create_form.autres_informations }}
+                        <!-- Affichage des erreurs -->
+                        {% if create_form.autres_informations.errors %}
+                            {% for error in create_form.autres_informations.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <button type="submit" name="create_journalisation" class="btn btn-primary">Créer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

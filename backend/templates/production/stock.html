@@ -1,0 +1,49 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block content %}
+<main class="p-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg p-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-300">Ajour  de Matière prémière</h3>
+        </div>
+
+        <div class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg p-6">
+                <form action="" method="post" enctype="multipart/form-data" class="space-y-6 text-gray-700 dark:text-gray-400">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="mb-4">
+                        <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ field.label }}</label>
+                        <!-- Gestion des autres champs -->
+                        <input id="{{ field.id_for_label }}" name="{{ field.name }}" type="{{ field.widget.attrs.type }}" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="{{ field.help_text }}"  >
+                        {% if field.errors %}
+                        <p class="text-sm text-red-600">{{ field.errors }}</p>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <div class="flex justify-end">
+                        <button type="submit" class="inline-flex items-center px-4 py-2 text-grey font-semibold text-sm leading-snug rounded focus:outline-none focus:ring-0 transition duration-150 ease-in-out" :class="{'bg-green-600 hover:bg-green-700': isDarkMode, 'bg-blue-600 hover:bg-blue-700': !isDarkMode}">Enregistrer</button>
+                        <a href="{% url 'list_stock' %}" class="inline-flex items-center ml-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold text-sm leading-snug rounded focus:outline-none focus:ring-0 transition duration-150 ease-in-out">Retour à la liste</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div id="notificationContainer" class="fixed bottom-5 right-5"></div>
+
+<script>
+function previewImage(event) {
+    var reader = new FileReader();
+    reader.onload = function() {
+        var output = document.getElementById('imagePreview');
+        output.src = reader.result;
+        output.style.display = 'block';
+    };
+    reader.readAsDataURL(event.target.files[0]);
+}
+</script>
+
+{% endblock %}

@@ -1,0 +1,116 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+            <div>
+                <!-- Button to trigger modal for creating new provision -->
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createProvisionModal">
+                    Ajouter une Provision
+                </button>
+            </div>
+            <div>
+                <form method="get" class="d-flex">
+                    <input type="text" name="aliment_id" class="form-control me-2" placeholder="Aliment" value="{{ request.GET.aliment_id }}">
+                    <input type="date" name="date_min" class="form-control me-2" placeholder="Date Min" value="{{ request.GET.date_min }}">
+                    <input type="date" name="date_max" class="form-control me-2" placeholder="Date Max" value="{{ request.GET.date_max }}">
+                    <button type="submit" class="btn btn-primary">Filtrer</button>
+                </form>
+            </div>
+        </div>
+        <div class="card border-0 shadow mb-4">
+            <div class="card-body">
+                <h2 class="h5 mb-4">Liste des Provisions</h2>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Date Provision</th>
+                                <th>Aliment</th>
+                                <th>Quantité</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for provision in provisions %}
+                            <tr>
+
+                                <td>{{ provision.date_provision }}</td>
+                                <td>{{ provision.aliment.nom }}</td>
+                                <td>{{ provision.quantite }}</td>
+                                
+                                <td>
+
+                                    <a href="{% url 'provision-update' provision.id %}"
+                                        class="btn btn-sm btn-primary me-1">
+                                        Modifier
+                                    </a>
+                                    <!-- Button to trigger modal for deleting a provision -->
+                                    <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteProvisionModal{{ provision.id }}">
+                                        Supprimer
+                                    </button>
+
+                                    <!-- Modal for deleting provision -->
+                                    <div class="modal fade" id="deleteProvisionModal{{ provision.id }}" tabindex="-1" aria-labelledby="deleteProvisionModalLabel{{ provision.id }}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="deleteProvisionModalLabel{{ provision.id }}">Supprimer Provision</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Êtes-vous sûr de vouloir supprimer cette provision ?</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                    <form method="post">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="provision_id" value="{{ provision.id }}">
+                                                        <button type="submit" name="delete_provision" class="btn btn-danger">Supprimer</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5">Aucune provision trouvée.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for creating a new Provision -->
+<div class="modal fade" id="createProvisionModal" tabindex="-1" aria-labelledby="createProvisionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createProvisionModalLabel">Créer une Provision</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ create_form.as_p }}
+                    <div class="modal-footer">
+                        <button type="submit" name="create_provision" class="btn btn-primary">Ajouter</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+
+{% endblock %}

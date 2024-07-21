@@ -1,0 +1,218 @@
+ .page-container {
+        padding-top: 40px;
+        padding-bottom: 40px;
+    }
+
+    .form-icon {
+        font-size: 48px;
+        color: #17a2b8;
+        margin-bottom: 20px;
+    }
+
+    .btn-custom {
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+        color: white;
+    }
+
+    .btn-custom:hover {
+        background-color: #138496;
+        border-color: #117a8b;
+    }
+
+    /* Style personnalisé pour les champs de formulaire et labels */
+    .form-control, .form-control:focus {
+        border-color: #17a2b8;
+        box-shadow: none; /* Supprime l'ombre lors du focus */
+    }
+
+    .form-control:focus {
+        border-width: 2px; /* Rend la bordure plus épaisse lors du focus */
+    }
+
+    label {
+        font-weight: 600; /* Rend le texte des labels plus gras */
+        color: #495057; /* Couleur plus foncée pour une meilleure lisibilité */
+    }
+
+
+
+    textarea.form-control {
+        height: 300px;
+    }
+    .page-container {
+        padding-top: 40px;
+        padding-bottom: 40px;
+    }
+    .form-control, .form-control:focus, textarea.form-control {
+    border-color: #17a2b8;
+    box-shadow: none; /* Supprime l'ombre lors du focus */
+}
+
+.form-control:focus {
+    border-width: 2px; /* Rend la bordure plus épaisse lors du focus */
+}
+
+label {
+    font-weight: 600; /* Rend le texte des labels plus gras */
+    color: #495057; /* Couleur plus foncée pour une meilleure lisibilité */
+}
+
+textarea.form-control {
+    height: 300px;
+}
+
+
+
+    .category-icon {
+        font-size: 48px; /* Augmentation de la taille de l'icône */
+        color: #17a2b8; /* Couleur personnalisée pour l'icône */
+        margin-bottom: 20px; /* Espacement avant le titre */
+    }
+
+    .card {
+        border: none; /* Suppression de la bordure de la carte */
+        box-shadow: 0 4px 6px rgba(0,0,0,.1); /* Ajout d'une ombre pour un effet moderne */
+        transition: transform 0.2s; /* Animation douce au survol */
+    }
+
+    .card:hover {
+        transform: translateY(-5px); /* Déplacement légèrement vers le haut au survol */
+    }
+
+    .btn-custom {
+        background-color: #17a2b8; /* Couleur personnalisée pour le bouton */
+        border-color: #17a2b8; /* Bordure du bouton de même couleur */
+        color: white; /* Texte blanc pour le bouton */
+    }
+
+    .btn-custom:hover {
+        background-color: #138496; /* Assombrissement du bouton au survol */
+        border-color: #117a8b;
+    }
+.form-background {
+        position: relative;
+        z-index: 1;
+    }
+
+    .form-panel {
+        background-color: rgba(255, 255, 255, 0.98);
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        position: relative; /* Assure que le formulaire est au-dessus du pseudo-élément d'arrière-plan */
+    }
+
+/* Adaptations pour le mode sombre */
+body.dark {
+    background-color: #121212; /* Fond plus sombre pour le thème sombre */
+    color: #ccc; /* Texte plus clair pour une meilleure lisibilité */
+}
+
+body.dark .form-icon,
+body.dark .category-icon {
+    color: #1DB9C3; /* Couleur adaptée au thème sombre */
+}
+
+body.dark .btn-custom {
+    background-color: #1DB9C3;
+    border-color: #1DB9C3;
+}
+
+body.dark .btn-custom:hover {
+    background-color: #138496;
+    border-color: #117a8b;
+}
+
+body.dark .form-control, body.dark .form-control:focus {
+    border-color: #1DB9C3;
+    background-color: #222; /* Fond des champs plus sombre */
+    color: #ccc; /* Texte clair pour le contraste */
+}
+
+body.dark label {
+    color: #CCC; /* Plus clair pour une meilleure lisibilité en mode sombre */
+}
+
+
+body.dark .card {
+    background-color: #333; /* Fond des cartes plus sombre */
+    color: #CCC; /* Texte des cartes plus clair pour le contraste */
+}
+
+body.dark .form-panel {
+    background-color: rgba(40, 40, 40, 0.98); /* Fond plus sombre avec un peu de transparence */
+    color: #CCC; /* Texte plus clair pour le contraste */
+}
+
+/* Adaptations pour le mode sombre */
+body.dark {
+    background-color: #121212; /* Fond plus sombre pour le thème sombre */
+    color: #ccc; /* Texte plus clair pour une meilleure lisibilité */
+}
+
+
+
+body.dark .form-control, body.dark .form-control:focus, body.dark textarea.form-control {
+    background-color: #222; /* Fond des champs plus sombre */
+    color: #ccc; /* Texte clair pour le contraste */
+    border-color: #1DB9C3;
+}
+body.dark label, body.dark .form-control::placeholder {
+    color: #ccc;
+}
+
+/* Ajout spécifique pour les placeholders en mode sombre */
+body.dark .form-control::placeholder, body.dark textarea.form-control::placeholder {
+    color: #b1b1b1; /* Couleur des placeholders plus claire pour le contraste */
+}
+
+body.dark label {
+    color: #CCC; /* Plus clair pour une meilleure lisibilité en mode sombre */
+}
+.scrollable-table {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.table {
+    border-collapse: collapse;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table thead th {
+    background-color: #28a745;
+    color: #ffffff;
+    padding: 12px 15px;
+    text-align: left;
+}
+
+.table tbody td {
+    padding: 12px 15px;
+    color: #333;
+    border-bottom: 1px solid #dddddd;
+}
+
+.product-name {
+        font-size: 18px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+         text-decoration: none;
+    }
+
+.product-name:hover {
+    color: #138496 !important;
+    transform: scale(1.05) !important;
+}
+
+.scrollable-list {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+.list-group-item:hover {
+    background-color: #f5f5f5; /* Choisissez la couleur que vous voulez */
+}

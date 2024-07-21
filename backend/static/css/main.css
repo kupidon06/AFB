@@ -1,0 +1,239 @@
+/* Reset some default styles for better consistency */
+body, h1, h2, h3, p, ul, li {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+}
+
+.container {
+    display: flex;
+}
+
+/* Sidebar Styles */
+aside {
+    width: 250px;
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    padding-top: 20px;
+    height: 100vh;
+}
+
+.top {
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+.logo img {
+    width: 80px;
+    border-radius: 50%;
+}
+
+.logo h2 {
+    margin-top: 10px;
+    font-size: 1.2em;
+}
+
+.sidebar a {
+    color: #ecf0f1;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    transition: background 0.3s;
+}
+
+.sidebar a:hover {
+    background: #34495e;
+}
+
+/* Main Content Styles */
+main {
+    flex: 1;
+    padding: 20px;
+}
+
+h1 {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+}
+
+/* Analytics Styles */
+.analyse {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.sales, .visits, .searches {
+    width: calc(33.33% - 20px);
+}
+
+.status {
+    background: #3498db;
+    color: #ecf0f1;
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.progresss {
+    display: flex;
+    align-items: center;
+}
+
+svg {
+    width: 80px;
+    height: 80px;
+}
+
+.percentage {
+    margin-left: 10px;
+}
+
+/* New Users Styles */
+.new-users {
+    margin-bottom: 30px;
+}
+
+.user-list {
+    display: flex;
+}
+
+.user {
+    margin-right: 15px;
+    text-align: center;
+}
+
+.user img {
+    width: 60px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+/* Recent Orders Styles */
+.recent-orders {
+    margin-bottom: 30px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th, td {
+    padding: 10px;
+    border-bottom: 1px solid #ecf0f1;
+    text-align: left;
+}
+
+a {
+    color: #3498db;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Right Section Styles */
+.right-section {
+    width: 300px;
+    background: #ecf0f1;
+    padding: 20px;
+}
+
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.dark-mode {
+    display: flex;
+}
+
+.dark-mode span {
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+}
+
+.profile p, .profile small {
+    margin: 0;
+}
+
+.profile-photo img {
+    width: 40px;
+    border-radius: 50%;
+    margin-left: 10px;
+}
+
+/* User Profile Styles */
+.user-profile {
+    text-align: center;
+}
+
+.user-profile img {
+    width: 80px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+/* Reminders Styles */
+.reminders {
+    margin-top: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.notification {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.notification .icon {
+    margin-right: 10px;
+}
+
+.add-reminder {
+    background: #3498db;
+    color: #ecf0f1;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.add-reminder span {
+    margin-right: 5px;
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    aside, main, .right-section {
+        width: 100%;
+    }
+}

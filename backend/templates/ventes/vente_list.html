@@ -1,0 +1,226 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+            <div>
+                <!-- Button to trigger modal for creating new sale -->
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createSaleModal">
+                    Ajouter une Vente
+                </button>
+            </div>
+            <div>
+                <form method="get" class="mb-3">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="client" class="form-label">Client</label>
+                            <form method="get" class="mb-3">
+                                <div class="input-group">
+                                    <input type="text" name="q" class="form-control" placeholder="Rechercher un fournisseur..." value="{{ request.GET.q }}">
+                                    
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="start_date" class="form-label">Date de début</label>
+                            <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request.GET.start_date }}">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="end_date" class="form-label">Date de fin</label>
+                            <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request.GET.end_date }}">
+                        </div>
+                        <div class="col-md-3 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary">Filtrer</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="card border-0 shadow mb-4">
+            <div class="card-body">
+                <h2 class="h5 mb-4">Liste des Ventes</h2>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Date Vente</th>
+                                <th>Client</th>
+                                <th>Montant Total</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for vente in ventes %}
+                            <tr>
+                                <td>{{ vente.date_vente }}</td>
+                                <td>{{ vente.client.phone }}</td>
+                                <td>{{ vente.montant_total }}</td>
+                                <td>
+                                    <a href="{% url 'vente-update' vente.id %}" class="btn btn-sm btn-primary me-1">
+                                        Modifier
+                                    </a>
+                                    <!-- Button to trigger modal for deleting a sale -->
+                                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteSaleModal" data-vente-id="{{ vente.id }}">
+                                        Supprimer
+                                    </button>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4">Aucune vente trouvée.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for creating a new Sale -->
+<div class="modal fade" id="createSaleModal" tabindex="-1" aria-labelledby="createSaleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createSaleModalLabel">Créer une Vente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ vente_form.as_p }}
+                    {{ formset.management_form }}
+
+                    <!-- Table for VenteItem formset -->
+                    <h5 class="h6 mb-3">Items de Vente</h5>
+                    <table class="table table-bordered" id="venteItemsTable">
+                        <thead>
+                            <tr>
+                                <th>Article Poule</th>
+                                <th>Article Œuf</th>
+                                <th>Quantité</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for form in formset %}
+                            <tr>
+                                <td>
+                                    {{ form.produit_poule.label_tag }}
+                                    {{ form.produit_poule }}
+                                </td>
+                                <td>
+                                    {{ form.produit_oeuf.label_tag }}
+                                    {{ form.produit_oeuf }}
+                                </td>
+                                <td>
+                                    {{ form.quantite.label_tag }}
+                                    {{ form.quantite }}
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-sm delete-sale-item">
+                                        Supprimer
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    
+                    <div class="modal-footer">
+                        <button type="button" id="addSaleItemButton" class="btn btn-secondary">Ajouter un autre item</button>
+                        <button type="submit" name="create_vente" class="btn btn-primary">Ajouter</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for confirming the deletion of a Sale -->
+<div class="modal fade" id="deleteSaleModal" tabindex="-1" aria-labelledby="deleteSaleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteSaleModalLabel">Confirmer la Suppression</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir supprimer cette vente ? Cette action est irréversible.</p>
+            </div>
+            <div class="modal-footer">
+                <form id="deleteSaleForm" method="post" action="{% url 'vente-delete' 0 %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="vente_id" id="venteIdToDelete" value="">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle dynamic addition of sale items
+    document.getElementById('addSaleItemButton').addEventListener('click', function() {
+        var formset = document.getElementById('venteItemsTable');
+        var totalForms = parseInt(document.querySelector('input[name="form-TOTAL_FORMS"]').value, 10);
+        var newRow = formset.querySelector('tbody tr').cloneNode(true);
+
+        // Update formset management form
+        document.querySelector('input[name="form-TOTAL_FORMS"]').value = totalForms + 1;
+
+        // Update the new row's form fields with correct indices
+        newRow.querySelectorAll('input, select').forEach(function(input) {
+            var name = input.name.replace(/-\d+-/, '-' + totalForms + '-');
+            input.name = name;
+            input.id = name.replace(/-/g, '_');  // Update ID as well
+        });
+
+        // Clear values in new row
+        newRow.querySelectorAll('input').forEach(function(input) {
+            input.value = '';
+        });
+
+        // Append new row
+        formset.querySelector('tbody').appendChild(newRow);
+    });
+
+    // Handle dynamic deletion of sale items
+    document.getElementById('venteItemsTable').addEventListener('click', function(e) {
+        if (e.target.classList.contains('delete-sale-item')) {
+            e.target.closest('tr').remove();
+            var totalForms = document.querySelector('input[name="form-TOTAL_FORMS"]');
+            totalForms.value = parseInt(totalForms.value) - 1;
+
+            // Update remaining forms' indices
+            document.querySelectorAll('#venteItemsTable tbody tr').forEach(function(row, index) {
+                row.querySelectorAll('input, select').forEach(function(input) {
+                    var name = input.name.replace(/-\d+-/, '-' + index + '-');
+                    input.name = name;
+                    input.id = name.replace(/-/g, '_');  // Update ID as well
+                });
+            });
+        }
+    });
+
+    // Handle deletion confirmation modal
+    var deleteSaleModal = document.getElementById('deleteSaleModal');
+    deleteSaleModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var venteId = button.getAttribute('data-vente-id');
+        var form = document.getElementById('deleteSaleForm');
+        var action = form.getAttribute('action').replace('0', venteId);
+        form.setAttribute('action', action);
+        document.getElementById('venteIdToDelete').value = venteId;
+    });
+});
+</script>
+{% endblock %}

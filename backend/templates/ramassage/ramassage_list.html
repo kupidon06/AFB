@@ -1,0 +1,176 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<div class="row">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+        <div>
+            <button class="btn btn-secondary d-inline-flex align-items-center me-2" data-bs-toggle="modal" data-bs-target="#createRamassageModal">
+                <svg class="icon icon-xs me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                Créer
+            </button>
+        </div>
+        <div class="dropdown">
+            {% include "heas.html" %}
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="card border-0 shadow mb-4">
+            <div class="card-body">
+                <h2 class="h5 mb-4">Liste des ramassages</h2>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Date de Ramassage</th>
+                                <th>Quantité 1er Ramassage</th>
+                                <th>Quantité 2eme Ramassage</th>
+                                <th>Quantité 3eme Ramassage</th>
+                                <th>Quantité 4eme Ramassage</th>
+                                <th>Commentaire</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ramassage in ramassages %}
+                            <tr>
+                                <td>{{ ramassage.date_ramassage }}</td>
+                                <td>{{ ramassage.quantite_premier_ramassage }}</td>
+                                <td>{{ ramassage.quantite_deuxieme_ramassage }}</td>
+                                <td>{{ ramassage.quantite_troisieme_ramassage }}</td>
+                                <td>{{ ramassage.quantite_quatrieme_ramassage }}</td>
+                                <td>{{ ramassage.commentaire }}</td>
+                                <td>
+                                    <!-- Boutons d'action -->
+                                    <a class="btn btn-sm btn-info me-1" href="{% url 'ramassage-update' ramassage.id %}">
+                                        Modifier
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteRamassageModal{{ ramassage.id }}">
+                                        Supprimer
+                                    </button>
+                                    <!-- Modal de suppression pour chaque ramassage -->
+                                    <div class="modal fade" id="deleteRamassageModal{{ ramassage.id }}" tabindex="-1" aria-labelledby="deleteRamassageModalLabel{{ ramassage.id }}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="deleteRamassageModalLabel{{ ramassage.id }}">Supprimer Ramassage</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Êtes-vous sûr de vouloir supprimer ce ramassage ?</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                    <form method="post" action="{% url 'ramassage-delete' ramassage.id %}" style="display: inline;">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="ramassage_id" value="{{ ramassage.id }}">
+                                                        <button type="submit" name="ramassage_journalisation" class="btn btn-sm btn-danger">Supprimer</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7">Aucun ramassage trouvé.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de création de ramassage -->
+<div class="modal fade" id="createRamassageModal" tabindex="-1" aria-labelledby="createRamassageModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createRamassageModalLabel">Créer un nouveau ramassage</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                
+                    <div class="mb-3">
+                        <label for="id_date_ramassage">Date de Ramassage:</label>
+                        <input type="date" class="form-control" id="id_date_ramassage" name="date_ramassage" value="{{ create_form.date_ramassage.value|date:'Y-m-d' }}" required>
+                        <!-- Affichage des erreurs -->
+                        {% if create_form.date_ramassage.errors %}
+                            {% for error in create_form.date_ramassage.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                
+                    <div class="mb-3">
+                        <label for="id_quantite_premier_ramassage">Quantité 1er Ramassage:</label>
+                        <input type="number" class="form-control" id="id_quantite_premier_ramassage" name="quantite_premier_ramassage" value="{{ create_form.quantite_premier_ramassage.value }}" required>
+                        <!-- Affichage des erreurs -->
+                        {% if create_form.quantite_premier_ramassage.errors %}
+                            {% for error in create_form.quantite_premier_ramassage.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                
+                    <div class="mb-3">
+                        <label for="id_quantite_deuxieme_ramassage">Quantité 2eme Ramassage:</label>
+                        <input type="number" class="form-control" id="id_quantite_deuxieme_ramassage" name="quantite_deuxieme_ramassage" value="{{ create_form.quantite_deuxieme_ramassage.value }}" required>
+                        <!-- Affichage des erreurs -->
+                        {% if create_form.quantite_deuxieme_ramassage.errors %}
+                            {% for error in create_form.quantite_deuxieme_ramassage.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                
+                    <div class="mb-3">
+                        <label for="id_quantite_troisieme_ramassage">Quantité 3eme Ramassage:</label>
+                        <input type="number" class="form-control" id="id_quantite_troisieme_ramassage" name="quantite_troisieme_ramassage" value="{{ create_form.quantite_troisieme_ramassage.value }}" required>
+                        <!-- Affichage des erreurs -->
+                        {% if create_form.quantite_troisieme_ramassage.errors %}
+                            {% for error in create_form.quantite_troisieme_ramassage.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                
+                    <div class="mb-3">
+                        <label for="id_quantite_quatrieme_ramassage">Quantité 4eme Ramassage:</label>
+                        <input type="number" class="form-control" id="id_quantite_quatrieme_ramassage" name="quantite_quatrieme_ramassage" value="{{ create_form.quantite_quatrieme_ramassage.value }}" required>
+                        <!-- Affichage des erreurs -->
+                        {% if create_form.quantite_quatrieme_ramassage.errors %}
+                            {% for error in create_form.quantite_quatrieme_ramassage.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                
+                    <div class="mb-3">
+                        <label for="id_commentaire">Commentaire:</label>
+                        <textarea class="form-control" id="id_commentaire" name="commentaire" rows="3">{{ create_form.commentaire.value }}</textarea>
+                        <!-- Affichage des erreurs -->
+                        {% if create_form.commentaire.errors %}
+                            {% for error in create_form.commentaire.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                
+                    <button type="submit" name="create_ramassage" class="btn btn-primary">Créer</button>
+                </form>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

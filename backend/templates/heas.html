@@ -1,0 +1,32 @@
+<div class="dropdown">
+    <button class="btn btn-gray-800 d-inline-flex align-items-center dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
+            <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
+        </svg>
+        Filtrer par
+    </button>
+    <div class="dropdown-menu dropdown-menu-end mt-2 py-1">
+        <form class="px-3 py-2" method="get" action="">
+            <div class="mb-3">
+                <label for="searchInput" class="form-label visually-hidden">Recherche par nom de bande</label>
+                <input type="text" class="form-control" id="searchInput" name="q" placeholder="Rechercher par nom de bande">
+            </div>
+            <div class="mb-3">
+                <label for="startDateInput" class="form-label visually-hidden">Date min</label>
+                <input type="date" class="form-control" id="startDateInput" name="date_min" placeholder="Date min">
+            </div>
+            <div class="mb-3">
+                <label for="endDateInput" class="form-label visually-hidden">Date max</label>
+                <input type="date" class="form-control" id="endDateInput" name="date_max" placeholder="Date max">
+            </div>
+            <button type="submit" class="btn btn-primary">Rechercher</button>
+        </form>
+    </div>
+</div>
+<button class="btn btn-secondary mt-3 d-flex align-items-center" onclick="window.history.go(-1);">
+    <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 19l-7-7 7-7M3 12h18"></path>
+    </svg>
+    Retour
+</button>

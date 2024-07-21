@@ -1,0 +1,39 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow mb-4">
+            <div class="card-body">
+                <h2 class="h5 mb-4">Modification de Provision</h2>
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="{{ form.fournisseur.id_for_label }}" class="form-label">{{ form.fournisseur.label }}</label>
+                        {{ form.fournisseur }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.aliment.id_for_label }}" class="form-label">{{ form.aliment.label }}</label>
+                        {{ form.aliment }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.quantite.id_for_label }}" class="form-label">{{ form.quantite.label }}</label>
+                        {{ form.quantite }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.date_provision.id_for_label }}" class="form-label">{{ form.date_provision.label }}</label>
+                        <input type="date" id="{{ form.date_provision.id_for_label }}" name="{{ form.date_provision.name }}" value="{{ form.instance.date_provision|date:'Y-m-d' }}" class="form-control">
+                        
+                    </div>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    <a href="{% url 'provision-list' %}" class="btn btn-secondary">Retour à la liste</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+
+{% endblock %}
