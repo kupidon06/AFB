@@ -1,48 +1,64 @@
 {% extends "layouts/base.html" %}
 
 {% block content %}
-<div class="container">
-    <h1 class="h3 mb-4">Liste des Œufs</h1>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+            <div>
+                <h1 class="h3 mb-4">Liste des Œufs</h1>
     
-    <!-- Button trigger modal -->
-    <button class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#createOeufModal">
-        Ajouter un Œuf
-    </button>
+                <!-- Button trigger modal -->
+                <button class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#createOeufModal">
+                    Ajouter un Œuf
+                </button>
+            </div>
+            <div>
+                <form method="get" class="mb-3">
+                    <div class="input-group">
+                        <input type="text" name="q" class="form-control" placeholder="Rechercher un œuf..." value="{{ request.GET.q }}">
+                        <button class="btn btn-primary" type="submit">Rechercher</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     
-    <!-- Oeuf List Table -->
-    <div class="card border-0 shadow mb-4">
-        <div class="card-body">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Nom</th>
-                        <th>Description</th>
-                        <th>Prix Unitaire</th>
-                        <th>Photo</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for oeuf in oeufs %}
-                    <tr>
-                        <td>{{ oeuf.nom }}</td>
-                        <td>{{ oeuf.description }}</td>
-                        <td>{{ oeuf.prix_unitaire }}</td>
-                        <td><img src="{{ oeuf.photo.url }}" alt="{{ oeuf.nom }}" style="width: 100px;"></td>
-                        <td>
-                            <a href="{% url 'oeuf-update' oeuf.id %}" class="btn btn-sm btn-primary">Modifier</a>
-                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteOeufModal" data-oeuf-id="{{ oeuf.id }}">
-                                Supprimer
-                            </button>
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="5">Aucun œuf trouvé.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <!-- Oeuf List Table -->
+        <div class="card border-0 shadow mb-4">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Description</th>
+                                <th>Prix Unitaire</th>
+                                <th>Photo</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for oeuf in oeufs %}
+                            <tr>
+                                <td>{{ oeuf.nom }}</td>
+                                <td>{{ oeuf.description }}</td>
+                                <td>{{ oeuf.prix_unitaire }}</td>
+                                <td><img src="{{ oeuf.photo.url }}" alt="{{ oeuf.nom }}" style="width: 100px;"></td>
+                                <td>
+                                    <a href="{% url 'oeuf-update' oeuf.id %}" class="btn btn-sm btn-primary">Modifier</a>
+                                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteOeufModal" data-oeuf-id="{{ oeuf.id }}">
+                                        Supprimer
+                                    </button>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5">Aucun œuf trouvé.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -91,6 +107,11 @@
         </div>
     </div>
 </div>
+
+<!-- Pikaday CSS and JS -->
+<link href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
     // JavaScript to set the oeuf_id in the delete form
